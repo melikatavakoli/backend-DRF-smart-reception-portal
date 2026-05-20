@@ -261,3 +261,12 @@ POST /checkin/verify-code/
   }
 }
 ```
+
+```
+
+## Author
+
+**Melika Tavakoli**  
+Backend Developer specializing in real-time systems, clean architecture, and scalable backend solutions.
+
+```
