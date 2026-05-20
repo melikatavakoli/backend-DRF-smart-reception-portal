@@ -1,4 +1,4 @@
-```md
+```
 # Django Checkin
 
 A reusable Django app for building OTP-based check-in and queue flows.
