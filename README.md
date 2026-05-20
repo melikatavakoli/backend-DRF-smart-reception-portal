@@ -261,6 +261,7 @@ POST /checkin/verify-code/
   }
 }
 ```
+<<<<<<< HEAD
 
 ```
 
@@ -270,3 +271,9 @@ POST /checkin/verify-code/
 Backend Developer specializing in real-time systems, clean architecture, and scalable backend solutions.
 
 ```
+=======
+Author
+Melika Tavakoli
+Backend Developer
+Focused on realtime systems, clean architecture, and scalable backend solutions.
+>>>>>>> 2b138caa4a792c6b97bf2433ac052184925d9ee8
