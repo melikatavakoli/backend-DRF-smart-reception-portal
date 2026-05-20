@@ -1,17 +1,18 @@
-```
-# Django Checkin
+---
 
-A reusable Django app for building OTP-based check-in and queue flows.
+# 🏁 Django Checkin
 
-The app provides the API flow and structure.  
+A reusable Django app for building OTP‑based check‑in and queue flows.
+
+This app provides a ready‑to‑use API structure for check‑ins and queue handling.  
 Your project provides the business logic through configurable hooks.
 
-App name: `checkin`  
-Default queue model name: `QueueEntry`
+**App name:** `checkin`  
+**Default model:** `QueueEntry`
 
 ---
 
-## Installation
+## 🚀 Installation
 
 Install the package:
 
@@ -28,7 +29,7 @@ INSTALLED_APPS = [
 ]
 ```
 
-Run migrations (if the package ships models):
+Run migrations (if the package includes models):
 
 ```bash
 python manage.py migrate
@@ -36,7 +37,7 @@ python manage.py migrate
 
 ---
 
-## Include URLs
+## 🌐 Include URLs
 
 In your project `urls.py`:
 
@@ -51,11 +52,9 @@ urlpatterns = [
 
 ---
 
-## Configuration
+## ⚙️ Configuration
 
-The app reads its configuration from the `CHECKIN` setting.
-
-In your project `settings.py`:
+The app reads its configuration from the `CHECKIN` setting in your `settings.py`:
 
 ```python
 CHECKIN = {
@@ -90,12 +89,13 @@ USER_SETTINGS = getattr(settings, "CHECKIN", {})
 
 
 def package_setting(name):
+    """Return the configured hook or its default value."""
     return USER_SETTINGS.get(name, DEFAULTS.get(name))
 ```
 
 ---
 
-## Required Hooks
+## 🧰 Required Hooks
 
 Create a file in your project, for example:
 
@@ -112,27 +112,24 @@ from django.core.cache import cache
 
 
 def get_user_by_identifier(identifier):
-    """
-    Return the user/client instance based on the provided identifier.
-    Example: mobile number, national ID, or customer code.
-    """
+    """Return the user/client instance based on the provided identifier."""
     from myapp.models import Client
     return Client.objects.filter(mobile=identifier).first()
 
 
 def generate_otp():
-    """Return a one-time password."""
+    """Generate a one-time password."""
     return str(random.randint(100000, 999999))
 
 
 def store_otp(identifier, otp):
-    """Store OTP temporarily (cache, DB, redis, etc.)."""
+    """Store OTP temporarily (cache, Redis, DB, etc.)."""
     cache.set(f"checkin:otp:{identifier}", otp, timeout=120)
 
 
 def send_otp(identifier, otp):
-    """Send OTP via SMS or other provider."""
-    print(f"Send OTP {otp} to {identifier}")
+    """Send OTP via SMS or another provider."""
+    print(f"Sending OTP {otp} to {identifier}")
 
 
 def verify_otp(identifier, otp):
@@ -147,9 +144,7 @@ def generate_register_code():
 
 
 def represent_checkin(queue_entry):
-    """
-    Convert a QueueEntry instance into a response dictionary.
-    """
+    """Convert a QueueEntry instance into a response dictionary."""
     return {
         "id": queue_entry.id,
         "code": queue_entry.code,
@@ -159,33 +154,27 @@ def represent_checkin(queue_entry):
 
 
 def get_tv_dashboard():
-    """
-    Return dashboard data for TV/public display.
-    """
+    """Return dashboard data for TV/public display."""
     from checkin.models import QueueEntry
 
     return {
-        "waiting": list(
-            QueueEntry.objects.filter(status="waiting").values("code")
-        ),
-        "active": list(
-            QueueEntry.objects.filter(status="active").values("code")
-        ),
-        "finished": list(
-            QueueEntry.objects.filter(status="finished").values("code")
-        ),
+        "waiting": list(QueueEntry.objects.filter(status="waiting").values("code")),
+        "active": list(QueueEntry.objects.filter(status="active").values("code")),
+        "finished": list(QueueEntry.objects.filter(status="finished").values("code")),
     }
 ```
 
 ---
 
-## QueueEntry Model
-
-Your project can use the provided `QueueEntry` model (if included), or integrate with it.
+## 📦 QueueEntry Model
 
 Example structure:
 
 ```python
+from django.conf import settings
+from django.db import models
+
+
 class QueueEntry(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -202,22 +191,22 @@ class QueueEntry(models.Model):
 
 ---
 
-## Typical Flow
+## 🔄 Typical Flow
 
-1. Client submits an identifier  
+1. User submits an identifier  
 2. `GET_USER_BY_IDENTIFIER` is called  
-3. `GENERATE_OTP`, `STORE_OTP`, and `SEND_OTP` are called  
-4. Client submits OTP  
-5. `VERIFY_OTP` is called  
+3. `GENERATE_OTP`, `STORE_OTP`, and `SEND_OTP` are executed  
+4. User submits the received OTP  
+5. `VERIFY_OTP` validates the OTP  
 6. On success:
-   - `GENERATE_REGISTER_CODE` is called
-   - A `QueueEntry` is created
+   - `GENERATE_REGISTER_CODE` is called  
+   - A `QueueEntry` is created  
    - `REPRESENT_CHECKIN` formats the response  
-7. Dashboard endpoints use `GET_TV_DASHBOARD`
+7. `GET_TV_DASHBOARD` provides data for public display
 
 ---
 
-## Example Requests
+## 📬 Example Requests
 
 ### Send Code
 
@@ -230,8 +219,6 @@ POST /checkin/send-code/
   "identifier": "09120000000"
 }
 ```
-
----
 
 ### Verify Code
 
@@ -248,7 +235,7 @@ POST /checkin/verify-code/
 
 ---
 
-### Example Success Response
+## ✅ Example Success Response
 
 ```json
 {
@@ -262,8 +249,11 @@ POST /checkin/verify-code/
 }
 ```
 
-## Author
+---
+
+## 👩‍💻 Author
 
 **Melika Tavakoli**  
-Backend Developer specializing in real-time systems, clean architecture, and scalable backend solutions.
+Backend Developer · Focused on real‑time systems, clean architecture, and scalable backend solutions.
 
+---
